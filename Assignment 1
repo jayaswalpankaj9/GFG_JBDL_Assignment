@@ -129,4 +129,26 @@ answer :    **final**
 
 
 Question 7. What is Collection?
-answer :    
+answer :    The Collection in java is a framework that provides an architecture to store and manipulate the group of objects.
+            Java Collection can achieve all the operations that you perform on data such as searching, sorting, insertion, manipulation and deletion.
+            Java Collection means a single unit of objects.
+            Java Collection provides many interfaces (Set, List, Queue, Deque) and classes (ArrayList, LinkedList, PriorityQueue, HashSet, LinkedHashSet, TreeSet).
+
+Question 8. ArrayList vs LinkedList?
+answer :    ArrayList and LinkedList both implements List Interface and maintains insertion order. Both are non synchronised classes.
+            Differences between ArrayList and LinkedList :
+            **ArrayList**
+            1)ArrayList internally uses dynamic array to store the elements.
+            2)Manipulations with ArrayList are slow, as it internally uses array. If any element is removed from the array, then all the bits are shifted in memory.
+            3)An ArrayList class can act as list only because it implements List interface.
+            4)ArrayList is better for storing and accessing data.
+            **LinkedList**
+            1)Linked List internally uses doubly linked list to store the elements.
+            2)Manipulations in LinkedList are faster than ArrayList because it uses doubly linked list internally, so no bit shifting is required in memory.
+            3)LinkedList class can act as a List and Queue both because it implements both List and Deque interfaces.
+            4)LinkedList is better for manipulating data.
+
+Question 9. equal vs ==?
+answer :    both are used to compare objects to check equality.
+            1) main difference is that equal() is method and == is an operator.
+            2) We use == operattor for reference comparision(address comparision) and equal() method for content comparision.
