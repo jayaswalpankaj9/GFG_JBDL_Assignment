@@ -1,5 +1,5 @@
 Question 1. What is interface?
-answer : An interface in java is a bllue-print of class. 
+answer : An interface in java is a blue-print of class. 
         It has variables and abstracts methods only, not method body.
         Interface is used to achieve multiple inheritance in java, which can not be achieved using classes.
         Unlike Classes we can not instantiate an object of interface.
