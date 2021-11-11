@@ -1,0 +1,132 @@
+Question 1. What is interface?
+answer : An interface in java is a bllue-print of class. 
+        It has variables and abstracts methods only, not method body.
+        Interface is used to achieve multiple inheritance in java, which can not be achieved using classes.
+        Unlike Classes we can not instantiate an object of interface.
+        Interfaces can be used to achieve loose coupling.
+        Interfaces are used for achieve abstraction.
+        Declaration : 
+            interface <interface name> {
+                //declare constant variables
+                //declare methods which are abstract by default
+            }
+
+
+Question 2. What is an abstract class?
+answer :    A class which is declared using abstract keyword is known as abstract class.
+            Abstract class can have both abstract and fully defined (non abstract) method.
+            Abstract class needs to be extended by subclass and it's abstract methods needs to be implemented in subclass.
+            Objects of Abstract class can not be instantiated.
+            Abstract class can have final methods, which will force the subclass to not change it's body.
+            Abstract class can have constructors and static methods also.
+
+
+Question 2. Difference between throw and throws?
+answer :    **Defintion**
+            throw : java throw keyword is used to throw an exception explicitly in the code, 
+                    inside the function or the block of code.
+            throws: java throws keyword is declared in the method signature, to declare the 
+                    exception/exceptions which might be thrown by method while execution of the code.
+
+            **Syntex**
+            throw : throw keyword is followed by an instance of exception to be thrown.
+            example if (num < 1) {  
+                        throw new ArithmeticException("\nNumber is negative, cannot calculate square");  
+                    } 
+                    
+            throws: throws keyword is followed by Classe names of exception to be thrown.
+            example public static int divideNum(int m, int n) throws ArithmeticException {  
+                        int div = m / n;  
+                        return div;  
+                    }  
+
+            **Declaration**
+            throw : throw is used within the method.
+            throws : throws is used in method signature.
+
+Question 4. What is Abstraction, Polymorphism, and Encapsulation?
+answer :    **Abstraction** is process of hiding implementation details and showing only functionality to the user.
+            In another words, we show only essesntial things to the user and hide the internal details from user.
+            example : sending a msg, we just type the msg and send it, we do not know the how it is being sent.
+            
+            Abstraction lets you focus on what the object does instead of how it does it.
+            There are two ways to achieve abstraction
+            1) Abstract Class (0 - 100%)
+            2) Interfaces (100%)
+
+            **Polymorphism** is a concept by which we can perform single in different ways.
+            Polymorphism means many forms in greek.
+            There are two types of Polymorphism in java, compile-time Polymorphism and run-time polymorphism,
+            which can be accomplished using method overloading and method over-riding respectively.
+
+            **Encapsulation** in java is a process of wrapping code and data together into a single unit.
+            We can create a fully encapsulated class in java by making all data-members private.
+            Now we can use setter and getter method to set and get the data in and from the class.
+
+            Advantages of Encapsulation :
+            1)  By providing only setter or getter methods in class, we can make a class write-only or read-only.
+                that is we can skip or getter or setter method.
+            2)  It provides you control over data. Suppose we dont want to avoid division by 0, so we can write
+                logic in setter for dividend, that will abort the division if divisor is 0.
+            3)  It is a way of data hiding, because other classes will not be able to access data from private data members.
+            4)  Encapsulated class is easy to tes, so unit-testing would be easy.
+    
+Question 5. What is inheritance and its type?
+answer  :   inheritance in java is mechanism in which one object acquire all the properties and behaviors
+            of parent object.
+            Inheritance represents IS-A relationship, which also represents parent-child relationship.
+            We use Inheritance in Java :
+                1)  for method overriding, so that runtime-polymorphism can be achieved.
+                2)  for code reusability.
+            Types of inheritance in java :
+                1) Single Level inheritance
+                2) Multilevel inheritance
+                3) Heirarchical inheritance : when two are more class inherits a single class, it is known as 
+                    heirarchical inheritance.
+                    eg. Dog and Cat class inherits Animal class.
+                    class Animal {
+                        //Properties and behaviors
+                    }
+                    class Cat extends Animal {
+                        
+                    }
+                    class Dog extends Animal {
+
+                    }
+            Question : Why multiple inheritance is not supported in java?
+            answer :   To reduce complexity and simplify the language, multiple inheritance is not used in java.
+                    Consider a scenario where we have 3 classes A, B and C.
+                    The C class inherits A and B class. If A and B class have the same method, and you call it from child
+                    class object, there will be ambiguity to call the method of A or B.
+                    
+                    Since compile time errors are better than runtime errors, java throws compile time error, if you 
+                    inherit two classes. So whether you have same method or different, there will be compile time 
+                    error if you will try to inherit two classes.
+
+Question 6. Difference between final, finally and finalize?
+answer :    **final**
+            Definition : Final is a keyword and access modifier, which is used to put restrictions on class, methods and variables.
+            Applicable to : Final keyword is used with classes, methods, and variables.
+            Functionality : 1) Once declared, final variable become constant and can not be modified.
+                            2) final method can not be overidden by subclass.
+                            3) final class can not be inherited.
+            Execution : Final method is executed only when we call it.
+
+            **finally**
+            Definition : finally is a block in java exception handling to execute the important piece of code whether
+                        the exception occurs or not.
+            Applicable to: finally block is always related to try and catch block in exception handling.
+            Functionality: 1)finally block runs the important code whether exception occured or not.
+                           2)finally block free up all the resources used in try block.
+            Execution : 1) Finally block is executed as soon as the try catch blocks are executed.
+                        2) it's execution is not dependent on the exception.
+            
+            **finalize**
+            Definition : finalize() is the method in java which is used to perform cleanup processing, just before the object is garbage collected.
+            Applicable to: finalize() method is used with objects.
+            Functionality : finalize() method perfoms the cleanup activity with respect to the object, before its destructions.
+            Execution : finalize() method is executed just before the object is destroyed.
+
+
+Question 7. What is Collection?
+answer :    
