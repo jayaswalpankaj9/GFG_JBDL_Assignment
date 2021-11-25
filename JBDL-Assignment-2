@@ -1,0 +1,171 @@
+Question 1. Describe hashmap internal working in detail. explain worst case scenario in case of
+collisions
+answer :   //useful video for hashmap internal working : https://www.youtube.com/watch?v=wZLn2BN1TvY
+            Table of Contents
+
+            1. Single statement answer
+            2. What is Hashing?
+            3. Entry class in HashMap
+            4. How put() methods works internally?
+            5. How get() methods works internally
+            6. Key Notes
+            7. [Update] Improvements in Java 8
+        
+        1. Single statement answer : HashMap works on principle of Hashing.
+
+        2. What is Hashing : It is way of assigning a unique code for any variable or object, after applying any formula or algorithm 
+            on it's properties.
+            A true **Hash Function** must follow this rule - Hash Function should return the same hash code each and every time, when the function is applied on same or equal objects. In other words, two equal objects must produce same hash code consistently.
+
+            Note : All objects in java inherit a default implementation of hashCode() function defined in Object class. This function produces
+            hash code by typical converting internal address of object into an integer, thus producing different hash code for all different objects.
+        
+       3. Entry class in HashMap : A map by definition is : "An object that maps keys to values".
+            So, there must be some mechanism in HashMap to store this key-value pair. HashMap has an nested static class Entry, which looks like this :
+
+             **Entry class**
+             static class Entry<K, V> implements Map.Entry<K, V>
+             {
+                 final K key;
+                 V value;
+                 Entry<K, V> next;
+                 final int hash;
+                 //.... more code goes here
+             }
+             Instances of Entry class are stored in an array. HashMap class defines this variable as :
+             **entry array**
+             transient Entry[] table;
+
+             the table resized as necessary. Length MUST always be power of two.
+
+        4. How put() methods works internally?
+            **code implementation of put() method**
+            /**
+            * Associates the specified value with the specified key in this map. If the
+            * map previously contained a mapping for the key, the old value is
+            * replaced.
+            *
+            * @param key
+            *            key with which the specified value is to be associated
+            * @param value
+            *            value to be associated with the specified key
+            * @return the previous value associated with <tt>key</tt>, or <tt>null</tt>
+            *         if there was no mapping for <tt>key</tt>. (A <tt>null</tt> return
+            *         can also indicate that the map previously associated
+            *         <tt>null</tt> with <tt>key</tt>.)
+            */
+            public V put(K key, V value) {
+                if (key == null)
+                return putForNullKey(value);
+                int hash = hash(key.hashCode());
+                int i = indexFor(hash, table.length);
+                for (Entry<K , V> e = table[i]; e != null; e = e.next) {
+                    Object k;
+                    if (e.hash == hash && ((k = e.key) == key || key.equals(k))) {
+                        V oldValue = e.value;
+                        e.value = value;
+                        e.recordAccess(this);
+                        return oldValue;
+                    }
+                }
+            
+                modCount++;
+                addEntry(hash, key, value, i);
+                return null;
+            }
+            
+            4.1 What put() method does
+                Internal working of put method in hashmap.
+                1. First of all, the key object is checked for null. if the key is null, the value is store in table[0] position. Because hashcode for null is always 0.
+                2. Then on next step, the hashvalue is calculated using the key's hash code by calling its hashCode() method. This hash value is used to calculate the index in the array for storing Entry object. JDK designers well assumed that there might be some poorly written hashCode() functions that can return very high or low hash code value. To solve this issue, they introduced another hash() function and passed the object’s hash code to this hash() function to bring hash value in the range of array index size.
+                3. Now indexfor(hash, table.length) function is called to calculate exact index position for storing the Entry object.
+            
+            4.2 How collision are resolved
+                Now, we know that two unequal objects can have the same hash code value, how two different objects will be stored in the same array location called bucket.
+
+                The answer is LinkedList. If you remember, Entry class, that has an attribute "next". This attribute always points to next object in chain. This is exactly the behavior of LinkedList.
+
+                1. So in case of collision, Entry class objects are stored in form of LinkedList form. When an Entry object needs to be stored in particular index, HashMap checks whether there is already an entry?? 
+                If there is no entry already present, the entry object is stored in this location.
+                If there is already an object sitting at calculated index, it's next attribute is checked. If it is null, the current entry object becomes next node in linkedlist. If next is not null, procedure is followed until next is evaluated as null.
+                
+                2. What if add another value object with same key as entered before. Logically it should replace the old value. How it is done? Well, after the index position of Entry object, while iterating over linkedlist object on calculated index, HashMap calls equal method on key object for each entry object.
+                All these entry objects in linkedlist will have similar hashcode but equals() method will test for true equality. If key.equals(k) will be true then both the keys are treated as same key object. This will cause the replacing of value object inside entry object only.
+
+                In this way, HashMap ensures the uniqueness of keys.
+
+        5. How HashMap.get() methods work internally?
+            Now we know that key-value pairs are stored in HashMap. Next big question is : what happens when an object is passed in get() method of HashMap? How the Value object is determined?
+
+            Answer we already should know that the way key uniqueness is determined in put() method, same logic is applied in get() method also. The moment hashmap identify the exact match of for the key object passed as an argument, it simply returns the value object stored in current Entry object.
+
+            if no match is found, get() method returns null.
+
+      /**
+        * Returns the value to which the specified key is mapped, or {@code null}
+        * if this map contains no mapping for the key.
+        **/
+
+        public V get(Object key) {
+            if (key == null)
+            return getForNullKey();
+            int hash = hash(key.hashCode());
+            for (Entry<K , V> e = table[indexFor(hash, table.length)]; e != null; e = e.next) {
+                Object k;
+                if (e.hash == hash && ((k = e.key) == key || key.equals(k)))
+                    return e.value;
+            }
+            return null;
+        }
+            
+        6. Key notes on internal working of HashMap
+            1. Data structure to store entry objects is an array named 'table' of type 'Entry'.
+            2. A particular index location in array is referred as bucket, because it can hold the first element of a linkedlist of entry objects.
+            3. Key object's hashCode is required to calculate the index location of Entry object.
+            4. Key object's equals() method is used to maintain uniqueness of keys in maps.
+            5. Value object's hashCode() and equals() method are not used in HashMap's get() and put() methods.
+            6. Hash code for null keys is always zero, and such entry object is always stored in zero index in Entry[].
+        
+        7. HashMap Improvements in Java 8.
+            There is a performance improvement for HashMap objects where there are lots of collisions in the keys by using balanced trees rather than linked lists to store map entries. The principal idea is that once the number of items in a hash bucket grows beyond a certain threshold, that bucket will switch from using a linked list of entries to a balanced tree. In the case of high hash collisions, this will improve worst-case performance from O(n) to O(log n).
+
+
+Question 3. What are dependency injections in spring? What is the role of Autowired?
+answer :    Every Java based application has a few objects that work together to present what the end-user sees as a working application.
+            When writing a complex java application, java classes should be as independent as possible of other java classes, to increase the possibility of reuse these classes and to test them independently of other classes while unit testing.
+            Dependency injection (or sometimes called wiring) helps in gluing these classes together and at the same time keeping them independent.
+            Consider you have an application which has a text editor component and you want to provide spell check. Your standard code would look something like this -
+            
+            public class TextEditor {
+                private SpellChecker spellChecker;
+
+                public TextEditor() {
+                    spellChecker = new SpellChecker();
+                }
+            }
+            What we have done here is, create a dependency between the TextEditor and the SpellChecker.
+            In an inversion of control scenario, we would instead do something like this -
+            
+            public class TextEditor {
+                private SpellChecker spellChecker;
+
+                public TextEditor(SpellChecker spellChecker) {
+                    this.spellChecker = spellChecker;
+                }
+            }
+            Here the TextEditor should not worry about SpellChecker implementation.
+            The SpellChecker would be implemented independently and will be provided to the TextEditor at the time of TextEditor instantiation. This entire procedure is controlled by the Spring Framework.
+            
+            Here, we have removed total control from the TextEditor and kept is somewhere else (i.e. XML configuration file) and the dependency (i.e. class SpellChecker) is being injected into the class TextEditor through a Class Constructor. 
+            Thus the flow of control has been "inverted" by Dependency injection (DI) because you have effectively delegated dependencies to some external system.
+
+            The second method of injecting dependency is through Setter Methods of the TextEditor class where we will create a SpellChecker instance. This instance will be used to call setter methods to initialise TextEditor's properties.
+            
+            Dependency injection Type and Description
+            1)Constructor-based dependency injection
+            2)Setter-based dependency injection
+
+            **Role of Autowired**
+            Autowiring feature of spring framework enables you to inject the object dependency implicitly. It internally uses setter or constructor injection.
+            Autowiring can't be used to inject primitive and string values. It works with reference only.
+            
